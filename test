@@ -1,0 +1,37 @@
+import fastf1 as ff1
+from fastf1 import plotting
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import figure
+
+# Enable the cache by providing the name of the cache folder
+ff1.Cache.enable_cache('cache')
+
+# Setup plotting
+plotting.setup_mpl()
+# Enable the cache
+ff1.Cache.enable_cache('cache')
+
+year, grand_prix, session = 2023, 'Bahrain', 'Test'
+
+test = ff1.get_session(year, grand_prix, session)
+test.load() # This is new with Fastf1 v.2.2
+
+# This is how it used to be:
+# laps = test.load_laps(with_telemetry=True)
+
+# Load the session data
+race = ff1.get_session(2023, 'Bahrain', 'Test')
+
+# Collect all race laps
+laps = race.load_laps(with_telemetry=True)
+
+# Get laps of the drivers (LEC and SAI)
+laps_lec = laps.pick_driver('LEC')
+laps_sai = laps.pick_driver('SAI')
+# Extract the fastest laps
+fastest_lec = laps_lec.pick_fastest()
+fastest_sai = laps_sai.pick_fastest()
+
+# Get telemetry from fastest laps
+telemetry_lec = fastest_lec.get_car_data().add_distance()
+telemetry_sai = fastest_sai.get_car_data().add_distance()
